@@ -1,13 +1,16 @@
 from defer import inline_callbacks
 from IPython.display import Image
-#import matplotlib
-
-import requests
-r = requests.get(url='http://api.open-notify.org/astros.json')
-r.json()
+import matplotlib
+from mpl_toolkits.basemap import Basemap 
+import matplotlib.pyplot as plt
+#%matplotlib inline 
 
 import pandas as pd
 import numpy as np
+import requests
+
+r = requests.get(url='http://api.open-notify.org/astros.json')
+r.json()
 
 def translate_geo_to_pixels(longitude, latitude, max_x_px, max_y_px):
     scale_x = (((longitude +180)/360) * max_x_px)
@@ -27,10 +30,6 @@ def get_space_station_location():
     print('space_station_latitude', space_station_latitude)
 
     return(space_station_longitude, space_station_latitude)
-
-from mpl_toolkits.basemap import Basemap 
-import matplotlib.pyplot as plt
-#%matplotlib inline 
 
 get_space_station_location()
 
