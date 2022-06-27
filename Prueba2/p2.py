@@ -58,4 +58,3 @@ while not salir:
         salir = True
     else:
         print("\nIngrese una opción valida")
-    

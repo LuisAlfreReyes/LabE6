@@ -33,6 +33,7 @@ def get_space_station_location():
 
 get_space_station_location()
 
+matplotlib 
 plt.figure(figsize = (20, 14))
  
 m = Basemap(llcrnrlon=-180, llcrnrlat=-65, urcrnrlon=180, urcrnrlat=8)
@@ -42,4 +43,30 @@ m.drawcoastlines(linewidth=1, color='black')
 
 space_station_longitude, space_station_latitude = get_space_station_location()
 m.scatter(space_station_longitude, space_station_latitude, s=200, alpha=0.9, color='red')
+#--------------------------------------------------------------------------------------------------
+record_data = True
+if record_data == True:
+  import datetime
+  date_to_print = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
+  import time
+  starttime = time.time()
+  space_station_data = []
+  while True:
+    r = requests.get(url='http://api.open-notify.org/iss-now.json')
+    space_station_location = (r.json())
+    print(space_station_location)
+
+    space_station_data.append([space_station_location['timestamp'],
+                               space_station_location['iss_position']['latitude'],
+                               space_station_location['iss_position']['longitude']])
+
+    #save to cxv
+    tmp_space_station_data_df = pd.DataFrame(space_station_data, columns = ['timestamp','latitude','longitude'])
+    tmp_space_station_data_df.to_csv('ISS_location_1.csv', index=None)
+
+    if len(space_station_data) > 15000:
+      break
+    
+    time.sleep(60.0 -((time.time()-starttime)%60.0))
+#-------------------------------------------------------------------------------------------------------------------

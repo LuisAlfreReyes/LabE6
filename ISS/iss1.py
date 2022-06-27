@@ -22,6 +22,9 @@ def tracker():
             lon = location['iss_position']['longitude']
             screen.title("ISS TRACKER: (Latitude: {},  Longitude: {})".format(lat,lon))
             iss.goto(float(lon),float(lat))
+            iss.pendown()
+            iss.pencolor('red')
+            iss.pensize(3)
             time.sleep(5)
         except Exception as e:
             print(str(e))
