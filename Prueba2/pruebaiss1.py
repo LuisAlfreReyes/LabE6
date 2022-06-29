@@ -2,6 +2,8 @@ import urllib.request as url
 import json
 import math 
 import time
+from datetime import datetime
+
 from cmath import sqrt
 ##################################################################################################################################################################################
 def estacion1():
@@ -72,29 +74,22 @@ def estacion1():
             print(str(e))
             break 
 ##################################################################################################################################################################################
-def separacion():
-    lat1 = 14.64433
-    lon1 = -90.51339
-#########################################################################################
-    ISS = url.Request("http://api.open-notify.org/iss-now.json")
-    response_ISS = url.urlopen(ISS)
-    ISS_obj = json.loads(response_ISS.read())
-    dato3 = ISS_obj['iss_position']['latitude'];
-    dato4 = ISS_obj['iss_position']['longitude'];
-    print('Latitud', dato3)
-    print('Longitud', dato4)
-#########################################################################################
-    lat2 = float(dato3)
-    lon2 = float(dato4)
+def pasoiss():
+    # Latitud y Logitud de la Ciudad de Madrid (usada como ejemplo)
+    latitud=14.5833
+    longitud=-90.5167
+    n=10 #número de veces que pasará la ISS
 
-    rad = math.pi/180
-    dlat = lat2-lat1
-    dlon = lon2-lon1
-    r = 6372.795477598
+    Pass=url.Request('http://api.open-notify.org/iss-pass.json?lat={}&lon={}&n={}'.format(latitud,longitud,n))
+    response_Pass= url.urlopen(Pass)
 
-    a = math.sin(rad*dlat/2)**2 + math.cos(rad*lat1)*math.cos(rad*lat2)*math.sin(rad*dlon/2)**2
-    distancia = 2*r*math.asin(math.sqrt(a))
-    print("la distancia es de ",int(distancia)," Km")
+    Pass_obj = json.loads(response_Pass.read())
+    print ("")
+    pass_list=[]
+    for count,item in enumerate(Pass_obj["response"], start=0):
+        pass_list.append(Pass_obj['response'][count]['risetime'])
+        print(datetime.fromtimestamp(pass_list[count]).strftime('%d-%m-%Y %H:%M:%S'))
+
 ##################################################################################################################################################################################
 def Menu():
     correcto = False
@@ -108,12 +103,12 @@ def Menu():
     return num
 salir = False 
 while not salir:
-    print("\n1 El azimut y la elevación \n2 para la distancia que hay de un punto a otro \n3 para deterner el programa")
+    print("\n1 El azimut y la elevación \n2 Para determinar la fecha que pasa la iss \n3 para deterner el programa")
     opcion = Menu()
     if opcion ==1:
         estacion1()
     elif opcion == 2:
-        separacion()
+        pasoiss()
     elif opcion == 3:
         salir = True
     else:
